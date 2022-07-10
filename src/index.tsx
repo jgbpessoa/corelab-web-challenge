@@ -1,15 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.module.scss';
-import VehiclesPage from './pages/Vehicles';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./index.module.scss";
+import VehiclesPage from "./pages/Vehicles";
+import LoginPage from "./pages/Login";
+import RegisterPage from "./pages/Register";
+import reportWebVitals from "./reportWebVitals";
+import Header from "./components/Header";
+import styles from "./index.module.scss";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <VehiclesPage />
+    <>
+      <Router>
+        <div className={styles.container}>
+          <Header />
+          <Routes>
+            <Route path="/" element={<VehiclesPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Routes>
+        </div>
+      </Router>
+    </>
   </React.StrictMode>
 );
 
