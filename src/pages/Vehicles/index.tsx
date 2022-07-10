@@ -8,14 +8,14 @@ const VehiclesPage = () => {
   const [vehicles, setVehicles] = useState<IVehicle[]>([]);
   const [search, setSearch] = useState<string>("");
 
-  useEffect(() => {
-    const fetchVehicles = async () => {
-      const payload = await getVehicles();
-      setVehicles(payload);
-    };
+  // useEffect(() => {
+  //   const fetchVehicles = async () => {
+  //     const payload = await getVehicles();
+  //     setVehicles(payload);
+  //   };
 
-    fetchVehicles();
-  }, []);
+  //   fetchVehicles();
+  // }, []);
 
   return (
     <div className={styles.Vehicles}>
