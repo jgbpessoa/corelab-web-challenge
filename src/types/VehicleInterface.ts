@@ -12,9 +12,9 @@ export interface VehicleInterface {
   name: string;
   description: string;
   plate: string;
-  year: number;
+  year: number | "";
   color: string;
-  price: number;
+  price: number | "";
   created_at?: Date;
   updated_at?: Date;
 }

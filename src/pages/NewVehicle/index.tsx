@@ -1,8 +1,9 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { VehicleInterface } from "../../types/VehicleInterface";
+import { colors } from "../../types/ColorsInterface";
 import { createVehicle } from "../../lib/api";
 import { toast } from "react-toastify";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function NewVehicle() {
   const [formData, setFormData] = useState<VehicleInterface>({
@@ -10,9 +11,9 @@ function NewVehicle() {
     name: "",
     description: "",
     plate: "",
-    year: 0,
+    year: "",
     color: "Branco",
-    price: 0,
+    price: "",
   });
 
   const navigate = useNavigate();
@@ -127,10 +128,14 @@ function NewVehicle() {
               onChange={handleChange}
               required
             >
-              <option value="Branco">Branco</option>
-              <option value="Preto">Preto</option>
-              <option value="Cinza">Cinza</option>
-              <option value="Vermelho">Vermelho</option>
+              {Object.keys(colors).map((key) => (
+                <option
+                  key={Math.random()}
+                  value={key.charAt(0).toUpperCase() + key.slice(1)}
+                >
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </option>
+              ))}
             </select>
           </div>
           <div className="form-group">

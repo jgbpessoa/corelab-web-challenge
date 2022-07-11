@@ -12,6 +12,7 @@ import styles from "./index.module.scss";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "./components/PrivateRoute";
+import "react-responsive-modal/styles.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

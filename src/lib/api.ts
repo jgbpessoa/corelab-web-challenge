@@ -73,12 +73,13 @@ export const createVehicle = async (
   }
 };
 
-// const endpoint = (path: string): string => API + path;
-
-// const get = async (path: string): Promise<any> => {
-//   return fetch(endpoint(path)).then((res) => res.json());
-// };
-
-// export const getVehicles = async () => {
-//   return get("/vehicles");
-// };
+export const fetchFilterValues = async (property: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/vehicles`, {
+      params: { property },
+    });
+    return response.data;
+  } catch (error: any) {
+    toast.error(error.message);
+  }
+};
