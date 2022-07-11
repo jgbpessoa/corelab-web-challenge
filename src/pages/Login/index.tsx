@@ -1,7 +1,55 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent, FormEventHandler } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { loginUser } from "../../lib/api";
+import { LoginData } from "../../types/LoginData";
 import { FaSignInAlt } from "react-icons/fa";
 
 function LoginPage() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const { email, password } = formData;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [(event.target as HTMLInputElement).id]: (
+        event.target as HTMLInputElement
+      ).value,
+    });
+  };
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    const userData: LoginData = {
+      email,
+      password,
+    };
+
+    const login = async (userData: LoginData) => {
+      const response: any = await loginUser(userData);
+
+      if (response.status === 200) {
+        navigate("/");
+      }
+    };
+
+    login(userData);
+  };
+
   return (
     <>
       <section className="heading">
@@ -11,15 +59,15 @@ function LoginPage() {
         <p>Please log in to get support</p>
       </section>
       <section className="form">
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input
               type="email"
               className="form-control"
               id="email"
-              value=""
+              value={email}
               placeholder="Enter your email"
-              onChange={() => {}}
+              onChange={handleChange}
               required
             />
           </div>
@@ -28,9 +76,9 @@ function LoginPage() {
               type="password"
               className="form-control"
               id="password"
-              value=""
+              value={password}
               placeholder="Enter your password"
-              onChange={() => {}}
+              onChange={handleChange}
               required
             />
           </div>

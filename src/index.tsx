@@ -8,6 +8,8 @@ import RegisterPage from "./pages/Register";
 import reportWebVitals from "./reportWebVitals";
 import Header from "./components/Header";
 import styles from "./index.module.scss";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -25,6 +27,7 @@ root.render(
           </Routes>
         </div>
       </Router>
+      <ToastContainer />
     </>
   </React.StrictMode>
 );

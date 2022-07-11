@@ -1,7 +1,62 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent, FormEventHandler } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { registerUser } from "../../lib/api";
+import { RegisterData } from "../../types/RegisterData";
 
 function RegisterPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    password2: "",
+  });
+
+  const { name, email, password, password2 } = formData;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [(event.target as HTMLInputElement).id]: (
+        event.target as HTMLInputElement
+      ).value,
+    });
+  };
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    const userData: RegisterData = {
+      name,
+      email,
+      password,
+    };
+
+    const register = async (userData: RegisterData) => {
+      const response: any = await registerUser(userData);
+
+      if (response.status === 200) {
+        navigate("/");
+      }
+    };
+
+    if (password !== password2) {
+      toast.error("Passwords do not match");
+    } else {
+      register(userData);
+    }
+  };
+
   return (
     <>
       <section className="heading">
@@ -11,14 +66,14 @@ function RegisterPage() {
         <p>Please create an account</p>
       </section>
       <section className="form">
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input
               type="text"
               className="form-control"
               id="name"
-              value=""
-              onChange={() => {}}
+              value={name}
+              onChange={handleChange}
               placeholder="Enter your name"
               required
             />
@@ -28,8 +83,8 @@ function RegisterPage() {
               type="email"
               className="form-control"
               id="email"
-              value=""
-              onChange={() => {}}
+              value={email}
+              onChange={handleChange}
               placeholder="Enter your email"
               required
             />
@@ -39,8 +94,8 @@ function RegisterPage() {
               type="password"
               className="form-control"
               id="password"
-              value=""
-              onChange={() => {}}
+              value={password}
+              onChange={handleChange}
               placeholder="Enter your password"
               required
             />
@@ -50,8 +105,8 @@ function RegisterPage() {
               type="password"
               className="form-control"
               id="password2"
-              value=""
-              onChange={() => {}}
+              value={password2}
+              onChange={handleChange}
               placeholder="Confirm your password"
               required
             />

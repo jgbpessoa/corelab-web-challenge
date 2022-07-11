@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getVehicles } from "../../lib/api";
+// import { getVehicles } from "../../lib/api";
 import { Button, Card, Search } from "../../components";
 import styles from "./Vehicles.module.scss";
 import { IVehicle } from "../../types/Vehicle";
