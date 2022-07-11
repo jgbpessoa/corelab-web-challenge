@@ -1,7 +1,7 @@
 export interface VehicleInterface {
-  id: number;
-  user_id: number;
-  user: {
+  id?: number;
+  user_id?: number;
+  user?: {
     id: number;
     name: string;
     email: string;
@@ -15,6 +15,6 @@ export interface VehicleInterface {
   year: number;
   color: string;
   price: number;
-  create_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }

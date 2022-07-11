@@ -15,9 +15,10 @@ const Card = ({ vehicle }: CardInterface) => {
         <p>Price: {vehicle.price}</p>
         <p>Description: {vehicle.description}</p>
         <p>Year: {vehicle.year}</p>
+        <p>Color: {vehicle.color}</p>
         <p>Plate: {vehicle.plate}</p>
-        <p>Owner: {vehicle.user.name}</p>
-        <p>Contact: {vehicle.user.email}</p>
+        <p>Owner: {vehicle.user?.name}</p>
+        <p>Contact: {vehicle.user?.email}</p>
       </div>
     </div>
   );

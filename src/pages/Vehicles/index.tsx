@@ -4,10 +4,13 @@ import { Button, Card, Search } from "../../components";
 import styles from "./Vehicles.module.scss";
 import { VehicleInterface } from "../../types/VehicleInterface";
 import { TermsInterface } from "../../types/TermsInterface";
+import { useNavigate } from "react-router-dom";
 
 const VehiclesPage = () => {
   const [vehicles, setVehicles] = useState<VehicleInterface[]>([]);
   const [search, setSearch] = useState<string>("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetch = async () => {
@@ -46,7 +49,12 @@ const VehiclesPage = () => {
         <>
           <Search placeholder="Search" value={search} onChange={handleChange} />
 
-          <Button text="Add new vehicle" onClick={() => {}} />
+          <Button
+            text="Add new vehicle"
+            onClick={() => {
+              navigate("/new-vehicle");
+            }}
+          />
 
           {vehicles.map((vehicle) => (
             <Card key={vehicle.id} vehicle={vehicle} />

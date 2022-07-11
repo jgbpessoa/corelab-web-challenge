@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../../lib/api";
 import { LoginInterface } from "../../types/LoginInterface";
 import { FaSignInAlt } from "react-icons/fa";
@@ -13,6 +13,8 @@ function LoginPage() {
 
   const { email, password } = formData;
   const navigate = useNavigate();
+  const location = useLocation() as any;
+  const from: string = location.state?.from.pathname || "/";
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -42,7 +44,7 @@ function LoginPage() {
       const response: any = await loginUser(userData);
 
       if (response.status === 200) {
-        navigate("/");
+        navigate(from);
       }
     };
 

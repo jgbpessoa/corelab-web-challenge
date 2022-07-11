@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { RegisterInterface } from "../types/RegisterInterface";
 import { LoginInterface } from "../types/LoginInterface";
 import { TermsInterface } from "../types/TermsInterface";
+import { VehicleInterface } from "../types/VehicleInterface";
 
 const API_URL = "http://localhost:3333/api";
 
@@ -47,6 +48,29 @@ export const searchAndFilter = async (terms: TermsInterface) => {
   const response = await axios.get(`${API_URL}/vehicles`, { params: terms });
 
   return response.data;
+};
+
+export const createVehicle = async (
+  vehicleData: VehicleInterface,
+  token: string
+) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  try {
+    const response = await axios.post(
+      `${API_URL}/vehicles`,
+      vehicleData,
+      config
+    );
+
+    toast.success("Vehicle successfully added!");
+    return response;
+  } catch (error) {
+    toast.error("Error while trying to add your car. Try again later");
+    console.log(error);
+  }
 };
 
 // const endpoint = (path: string): string => API + path;
