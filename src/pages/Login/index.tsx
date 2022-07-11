@@ -1,9 +1,8 @@
-import React, { ChangeEvent, FormEvent, FormEventHandler } from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { loginUser } from "../../lib/api";
-import { LoginData } from "../../types/LoginData";
+import { LoginInterface } from "../../types/LoginInterface";
 import { FaSignInAlt } from "react-icons/fa";
 
 function LoginPage() {
@@ -34,12 +33,12 @@ function LoginPage() {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const userData: LoginData = {
+    const userData: LoginInterface = {
       email,
       password,
     };
 
-    const login = async (userData: LoginData) => {
+    const login = async (userData: LoginInterface) => {
       const response: any = await loginUser(userData);
 
       if (response.status === 200) {

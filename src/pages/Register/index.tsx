@@ -1,10 +1,10 @@
-import React, { ChangeEvent, FormEvent, FormEventHandler } from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { registerUser } from "../../lib/api";
-import { RegisterData } from "../../types/RegisterData";
+import { RegisterInterface } from "../../types/RegisterInterface";
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -36,13 +36,13 @@ function RegisterPage() {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const userData: RegisterData = {
+    const userData: RegisterInterface = {
       name,
       email,
       password,
     };
 
-    const register = async (userData: RegisterData) => {
+    const register = async (userData: RegisterInterface) => {
       const response: any = await registerUser(userData);
 
       if (response.status === 200) {

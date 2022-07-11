@@ -1,17 +1,24 @@
 import React, { ReactNode } from "react";
+import { VehicleInterface } from "../../types/VehicleInterface";
 import styles from "./Card.module.scss";
 
-interface ICard {
-  title: string;
-  children: ReactNode;
+interface CardInterface {
+  vehicle: VehicleInterface;
 }
 
-const Card = (props: ICard) => {
+const Card = ({ vehicle }: CardInterface) => {
   return (
     <div className={styles.Card}>
-      <h2>{props.title}</h2>
-
-      <div className={styles.content}>{props.children}</div>
+      <h2>{vehicle.name}</h2>
+      <div className={styles.content}>
+        <p>Brand: {vehicle.brand}</p>
+        <p>Price: {vehicle.price}</p>
+        <p>Description: {vehicle.description}</p>
+        <p>Year: {vehicle.year}</p>
+        <p>Plate: {vehicle.plate}</p>
+        <p>Owner: {vehicle.user.name}</p>
+        <p>Contact: {vehicle.user.email}</p>
+      </div>
     </div>
   );
 };
