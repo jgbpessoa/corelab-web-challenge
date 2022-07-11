@@ -1,10 +1,16 @@
 import React from "react";
 import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
 
 const Header = () => {
-  const user = "";
+  const user = localStorage.getItem("user");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   return (
     <header>
@@ -14,7 +20,7 @@ const Header = () => {
       <ul>
         {user ? (
           <li>
-            <button>
+            <button onClick={handleLogout}>
               <FaSignOutAlt />
               Logout
             </button>
