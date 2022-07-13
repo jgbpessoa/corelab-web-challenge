@@ -83,3 +83,15 @@ export const fetchFilterValues = async (property: string) => {
     toast.error(error.message);
   }
 };
+
+export const deleteVehicle = async (token: string, id: number) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  try {
+    await axios.delete(`${API_URL}/vehicles/${id}`, config);
+  } catch (error: any) {
+    toast.error("Delete failed! Try again later");
+  }
+};

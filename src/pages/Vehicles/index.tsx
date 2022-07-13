@@ -119,7 +119,11 @@ const VehiclesPage = () => {
           />
 
           {vehicles.map((vehicle) => (
-            <Card key={vehicle.id} vehicle={vehicle} />
+            <Card
+              key={vehicle.id}
+              vehicle={vehicle}
+              setVehicles={setVehicles}
+            />
           ))}
           {vehicles.length === 0 && <p>No vehicles were found ;C</p>}
         </>

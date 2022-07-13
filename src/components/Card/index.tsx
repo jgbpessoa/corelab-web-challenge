@@ -5,17 +5,22 @@ import styles from "./Card.module.scss";
 import { text } from "stream/consumers";
 import Button from "../Button";
 import { FaHeart, FaRegHeart, FaEdit, FaTrashAlt } from "react-icons/fa";
+import { deleteVehicle, fetchVehicles } from "../../lib/api";
+import { toast } from "react-toastify";
 
 interface CardInterface {
   vehicle: VehicleInterface;
+  setVehicles: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const Card = ({ vehicle }: CardInterface) => {
+const Card = ({ vehicle, setVehicles }: CardInterface) => {
   const user = localStorage.getItem("user");
   let userId;
+  let userToken: string;
 
   if (user) {
     userId = JSON.parse(user).data.user.id;
+    userToken = JSON.parse(user).data.token.token;
   }
   let backgroundColor;
   let textColor;
@@ -38,6 +43,15 @@ const Card = ({ vehicle }: CardInterface) => {
       }
     }
   }
+
+  const handleDelete = async (userToken: string, vehicleId: number) => {
+    await deleteVehicle(userToken, vehicleId);
+    const response = await fetchVehicles();
+    if (response) {
+      toast.success("Vehicle was deleted!");
+      setVehicles(response.vehicles.data);
+    }
+  };
 
   return (
     <div
@@ -64,7 +78,11 @@ const Card = ({ vehicle }: CardInterface) => {
         </Button>
       )}
       {vehicle.user_id === userId && (
-        <Button onClick={() => {}}>
+        <Button
+          onClick={() => {
+            handleDelete(userToken, vehicle.id as number);
+          }}
+        >
           <FaTrashAlt />
         </Button>
       )}
