@@ -7,6 +7,7 @@ import Button from "../Button";
 import { FaHeart, FaRegHeart, FaEdit, FaTrashAlt } from "react-icons/fa";
 import { deleteVehicle, fetchVehicles } from "../../lib/api";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 interface CardInterface {
   vehicle: VehicleInterface;
@@ -73,9 +74,11 @@ const Card = ({ vehicle, setVehicles }: CardInterface) => {
         <FaRegHeart />
       </Button>
       {vehicle.user_id === userId && (
-        <Button onClick={() => {}}>
-          <FaEdit />
-        </Button>
+        <Link to="/edit-vehicle" state={vehicle}>
+          <Button onClick={() => {}}>
+            <FaEdit />
+          </Button>
+        </Link>
       )}
       {vehicle.user_id === userId && (
         <Button

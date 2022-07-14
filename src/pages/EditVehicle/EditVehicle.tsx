@@ -1,22 +1,21 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { VehicleInterface } from "../../types/VehicleInterface";
 import { colors } from "../../types/ColorsInterface";
-import { createVehicle } from "../../lib/api";
+import { updateVehicle } from "../../lib/api";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-function NewVehicle() {
-  const [formData, setFormData] = useState<VehicleInterface>({
-    brand: "",
-    name: "",
-    description: "",
-    plate: "",
-    year: "",
-    color: "Branco",
-    price: "",
-  });
-
+function EditVehicle() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const vehicleData = location.state as VehicleInterface;
+
+  const editData = vehicleData ? vehicleData : {};
+
+  const [formData, setFormData] = useState<VehicleInterface>(
+    editData as VehicleInterface
+  );
 
   const handleChange = (event: ChangeEvent) => {
     if (event.target.id === "year" || event.target.id === "price") {
@@ -46,25 +45,34 @@ function NewVehicle() {
     const { token } = JSON.parse(localStorage.getItem("user") as string).data
       .token;
 
-    const create = async (vehicleData: VehicleInterface, token: string) => {
-      const response = await createVehicle(vehicleData, token);
-      console.log(response);
+    const update = async (
+      vehicleData: VehicleInterface,
+      token: string,
+      vehicleId: number
+    ) => {
+      const response = await updateVehicle(vehicleId, vehicleData, token);
 
-      if (response?.status === 201) {
+      if (response?.status === 200) {
         navigate("/");
       }
     };
 
     if (token) {
-      create(formData, token);
+      update(
+        formData,
+        token,
+        (location.state as VehicleInterface).id as number
+      );
     }
   };
 
-  return (
+  return vehicleData === null ? (
+    <div>Unauthorized Access</div>
+  ) : (
     <>
       <section className="heading">
-        <h1>Create New Vehicle Listing</h1>
-        <p>Please fill out the form below</p>
+        <h1>Edit Vehicle Listing</h1>
+        <p>Please fill out the info you want to update below</p>
       </section>
       <section className="form">
         <form onSubmit={handleSubmit}>
@@ -168,4 +176,4 @@ function NewVehicle() {
   );
 }
 
-export default NewVehicle;
+export default EditVehicle;

@@ -6,6 +6,7 @@ import VehiclesPage from "./pages/Vehicles";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import NewVehiclePage from "./pages/NewVehicle";
+import EditVehiclePage from "./pages/EditVehicle/EditVehicle";
 import reportWebVitals from "./reportWebVitals";
 import Header from "./components/Header";
 import styles from "./index.module.scss";
@@ -29,6 +30,9 @@ root.render(
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/new-vehicle" element={<PrivateRoute />}>
               <Route path="/new-vehicle" element={<NewVehiclePage />} />
+            </Route>
+            <Route path="/edit-vehicle" element={<PrivateRoute />}>
+              <Route path="/edit-vehicle" element={<EditVehiclePage />} />
             </Route>
           </Routes>
         </div>

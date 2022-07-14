@@ -95,3 +95,27 @@ export const deleteVehicle = async (token: string, id: number) => {
     toast.error("Delete failed! Try again later");
   }
 };
+
+export const updateVehicle = async (
+  id: number,
+  vehicleData: VehicleInterface,
+  token: string
+) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  try {
+    const response = await axios.patch(
+      `${API_URL}/vehicles/${id}`,
+      vehicleData,
+      config
+    );
+
+    toast.success("Vehicle successfully updated!");
+    return response;
+  } catch (error) {
+    toast.error("Error while trying to update your car. Try again later");
+    console.log(error);
+  }
+};
