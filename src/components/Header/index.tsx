@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
 
 const Header = () => {
-  const user = localStorage.getItem("user");
+  const [user, setUser] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setUser(localStorage.getItem("user") as string);
+  }, []);
+
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    window.location.reload();
     navigate("/");
+    localStorage.removeItem("user");
   };
 
   return (

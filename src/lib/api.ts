@@ -119,3 +119,56 @@ export const updateVehicle = async (
     console.log(error);
   }
 };
+
+export const fetchFavorites = async (token: string) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  try {
+    const response = await axios.get(
+      `${API_URL}/vehicles/favorites/data`,
+      config
+    );
+    return response;
+  } catch (error) {
+    toast.error("Error while loading favorites! Try again later");
+    console.log(error);
+  }
+};
+
+export const addFavorite = async (token: string, vehicleId: number) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  try {
+    const response = await axios.post(
+      `${API_URL}/vehicles/favorites`,
+      { id: vehicleId },
+      config
+    );
+
+    toast.success("Vehicle successfully added as favorite!");
+    return response;
+  } catch (error) {
+    toast.error("Error! Try again later");
+    console.log(error);
+  }
+};
+
+export const deleteFavorite = async (token: string, vehicleId: number) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  try {
+    const response = await axios.delete(
+      `${API_URL}/vehicles/favorites/${vehicleId}`,
+      config
+    );
+
+    toast.success("Vehicle successfully removed from favorites!");
+    return response;
+  } catch (error) {
+    toast.error("Error! Try again later");
+    console.log(error);
+  }
+};

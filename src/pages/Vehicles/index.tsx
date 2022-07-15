@@ -3,6 +3,7 @@ import {
   fetchVehicles,
   searchAndFilter,
   fetchFilterValues,
+  fetchFavorites,
 } from "../../lib/api";
 import { Button, Card, Search } from "../../components";
 import styles from "./Vehicles.module.scss";
@@ -15,6 +16,7 @@ import FilterForm from "../../components/FilterForm";
 
 const VehiclesPage = () => {
   const [vehicles, setVehicles] = useState<VehicleInterface[]>([]);
+  const [favorites, setFavorites] = useState<VehicleInterface[]>([]);
   const [searchTerms, setSearchTerms] = useState<TermsInterface>({
     search: "",
     max_price: "",
@@ -35,6 +37,19 @@ const VehiclesPage = () => {
   const [brandFilters, setBrandFilters] = useState([]);
   const [colorFilters, setColorFilters] = useState([]);
   const [yearFilters, setYearFilters] = useState([]);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    const fetchFav = async (userToken: string) => {
+      const response = await fetchFavorites(userToken);
+      setFavorites(response?.data.data);
+    };
+
+    if (user) {
+      const userToken = JSON.parse(user).data.token.token;
+      fetchFav(userToken);
+    }
+  }, []);
 
   useEffect(() => {
     const fetch = async () => {
@@ -123,6 +138,7 @@ const VehiclesPage = () => {
               key={vehicle.id}
               vehicle={vehicle}
               setVehicles={setVehicles}
+              favorites={favorites}
             />
           ))}
           {vehicles.length === 0 && <p>No vehicles were found ;C</p>}

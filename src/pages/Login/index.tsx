@@ -45,6 +45,7 @@ function LoginPage() {
 
       if (response.status === 200) {
         navigate(from);
+        window.location.reload();
       }
     };
 

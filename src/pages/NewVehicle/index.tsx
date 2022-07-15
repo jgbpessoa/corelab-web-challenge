@@ -48,7 +48,6 @@ function NewVehicle() {
 
     const create = async (vehicleData: VehicleInterface, token: string) => {
       const response = await createVehicle(vehicleData, token);
-      console.log(response);
 
       if (response?.status === 201) {
         navigate("/");

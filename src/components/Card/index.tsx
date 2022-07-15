@@ -1,28 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { VehicleInterface } from "../../types/VehicleInterface";
 import { ColorsInterface, colors } from "../../types/ColorsInterface";
 import styles from "./Card.module.scss";
-import { text } from "stream/consumers";
 import Button from "../Button";
 import { FaHeart, FaRegHeart, FaEdit, FaTrashAlt } from "react-icons/fa";
-import { deleteVehicle, fetchVehicles } from "../../lib/api";
+import {
+  addFavorite,
+  deleteFavorite,
+  deleteVehicle,
+  fetchVehicles,
+} from "../../lib/api";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface CardInterface {
   vehicle: VehicleInterface;
   setVehicles: React.Dispatch<React.SetStateAction<any>>;
+  favorites: VehicleInterface[];
 }
 
-const Card = ({ vehicle, setVehicles }: CardInterface) => {
+const Card = ({ vehicle, setVehicles, favorites }: CardInterface) => {
+  const [isFavorite, setIsFavorite] = useState(false);
   const user = localStorage.getItem("user");
+  const navigate = useNavigate();
+
   let userId;
-  let userToken: string;
+  let userToken = "";
 
   if (user) {
     userId = JSON.parse(user).data.user.id;
     userToken = JSON.parse(user).data.token.token;
   }
+
+  useEffect(() => {
+    favorites.some((favorite) => favorite.id === vehicle.id) &&
+      setIsFavorite(true);
+  }, [favorites, vehicle.id]);
+
   let backgroundColor;
   let textColor;
 
@@ -54,6 +68,25 @@ const Card = ({ vehicle, setVehicles }: CardInterface) => {
     }
   };
 
+  const handleFavoriteAdd = async () => {
+    if (!userToken) {
+      navigate("/login");
+      return;
+    }
+
+    await addFavorite(userToken, vehicle.id as number);
+    setIsFavorite(true);
+  };
+  const handleFavoriteDelete = async () => {
+    if (!userToken) {
+      navigate("/login");
+      return;
+    }
+
+    await deleteFavorite(userToken, vehicle.id as number);
+    setIsFavorite(false);
+  };
+
   return (
     <div
       style={{ backgroundColor: `${backgroundColor}`, color: `${textColor}` }}
@@ -70,9 +103,15 @@ const Card = ({ vehicle, setVehicles }: CardInterface) => {
         <p>Owner: {vehicle.user?.name}</p>
         <p>Contact: {vehicle.user?.email}</p>
       </div>
-      <Button onClick={() => {}}>
-        <FaRegHeart />
-      </Button>
+      {isFavorite ? (
+        <Button onClick={handleFavoriteDelete}>
+          <FaHeart />
+        </Button>
+      ) : (
+        <Button onClick={handleFavoriteAdd}>
+          <FaRegHeart />
+        </Button>
+      )}
       {vehicle.user_id === userId && (
         <Link to="/edit-vehicle" state={vehicle}>
           <Button onClick={() => {}}>
