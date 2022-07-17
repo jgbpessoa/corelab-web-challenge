@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import {
   fetchVehicles,
   searchAndFilter,
@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { BsSliders } from "react-icons/bs";
 import { Modal } from "react-responsive-modal";
 import FilterForm from "../../components/FilterForm";
+import AuthContext from "../../context/auth/AuthContext";
 
 const VehiclesPage = () => {
   const [vehicles, setVehicles] = useState<VehicleInterface[]>([]);
@@ -25,6 +26,8 @@ const VehiclesPage = () => {
     color: "",
     year: "",
   });
+
+  const { state } = useContext(AuthContext);
 
   //Modal
   const [open, setOpen] = useState(false);
@@ -39,34 +42,32 @@ const VehiclesPage = () => {
   const [yearFilters, setYearFilters] = useState([]);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
     const fetchFav = async (userToken: string) => {
       const response = await fetchFavorites(userToken);
-      setFavorites(response?.data.data);
+      setFavorites(response?.data.favorites);
     };
 
-    if (user) {
-      const userToken = JSON.parse(user).data.token.token;
-      fetchFav(userToken);
+    if (state.token) {
+      fetchFav(state.token);
     }
-  }, []);
+  }, [state]);
 
   useEffect(() => {
     const fetch = async () => {
       const response = await fetchVehicles();
       if (response) {
-        setVehicles(response.vehicles.data);
+        setVehicles(response.data.vehicles.data);
       }
     };
 
     const fetchFilters = async () => {
       const responseBrand = await fetchFilterValues("brand");
-      setBrandFilters(responseBrand.data.sort());
+      setBrandFilters(responseBrand?.data.sort());
       const responseColor = await fetchFilterValues("color");
-      setColorFilters(responseColor.data.sort());
+      setColorFilters(responseColor?.data.sort());
       const responseYear = await fetchFilterValues("year");
       setYearFilters(
-        responseYear.data.sort(function (a: number, b: number) {
+        responseYear?.data.sort(function (a: number, b: number) {
           return b - a;
         })
       );
@@ -79,7 +80,7 @@ const VehiclesPage = () => {
         const response = await searchAndFilter(terms);
 
         if (response) {
-          setVehicles(response.vehicles.data);
+          setVehicles(response.data.vehicles.data);
         }
       };
 

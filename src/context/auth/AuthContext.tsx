@@ -6,22 +6,25 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const AuthContext = createContext({} as AuthContextData);
+const userData = localStorage.getItem("user");
+
+const initialState: AuthContextData = {
+  user: userData ? JSON.parse(userData).user.data : "",
+  token: userData ? JSON.parse(userData).user.token : "",
+  isLoading: false,
+  errorMessage: "",
+};
+
+const AuthContext = createContext<{
+  state: AuthContextData;
+  dispatch: React.Dispatch<any>;
+}>({ state: initialState, dispatch: () => null });
 
 export const AuthProvider = ({ children }: Props) => {
-  const userData = localStorage.getItem("user");
-
-  const initialState: AuthContextData = {
-    user: userData ? JSON.parse(userData).data.user : "",
-    token: userData ? JSON.parse(userData).data.token.token : "",
-    isLoading: false,
-    errorMessage: "",
-  };
-
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
+    <AuthContext.Provider value={{ state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );

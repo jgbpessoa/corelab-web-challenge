@@ -16,8 +16,8 @@ export const registerUser = async (registerData: RegisterInterface) => {
     }
 
     return response;
-  } catch (error: any) {
-    toast.error("User already exists");
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -30,15 +30,15 @@ export const loginUser = async (loginData: LoginInterface) => {
     }
 
     return response;
-  } catch (error: any) {
-    toast.error("You have entered an invalid username or password");
+  } catch (error) {
+    throw error;
   }
 };
 
 export const fetchVehicles = async () => {
   try {
     const response = await axios.get(`${API_URL}/vehicles`);
-    return response.data;
+    return response;
   } catch (error: any) {
     toast.error(error.message);
   }
@@ -47,7 +47,7 @@ export const fetchVehicles = async () => {
 export const searchAndFilter = async (terms: TermsInterface) => {
   const response = await axios.get(`${API_URL}/vehicles`, { params: terms });
 
-  return response.data;
+  return response;
 };
 
 export const createVehicle = async (

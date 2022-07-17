@@ -1,15 +1,19 @@
-import React, { ChangeEvent, FormEvent } from "react";
+import React, { ChangeEvent, FormEvent, useContext } from "react";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../../lib/api";
 import { LoginInterface } from "../../types/LoginInterface";
 import { FaSignInAlt } from "react-icons/fa";
+import AuthContext from "../../context/auth/AuthContext";
+import { AxiosError, AxiosResponse } from "axios";
+import { toast } from "react-toastify";
 
 function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const { state, dispatch } = useContext(AuthContext);
 
   const { email, password } = formData;
   const navigate = useNavigate();
@@ -17,12 +21,15 @@ function LoginPage() {
   const from: string = location.state?.from.pathname || "/";
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-
-    if (user) {
+    if (state.token) {
       navigate("/");
     }
-  }, [navigate]);
+
+    if (state.errorMessage) {
+      toast.error(state.errorMessage);
+      dispatch({ type: "RESET" });
+    }
+  }, [navigate, state, dispatch, state.errorMessage]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -41,11 +48,21 @@ function LoginPage() {
     };
 
     const login = async (userData: LoginInterface) => {
-      const response: any = await loginUser(userData);
+      dispatch({ type: "AUTH_REQUEST" });
+      try {
+        const response = await loginUser(userData);
 
-      if (response.status === 200) {
-        navigate(from);
-        window.location.reload();
+        if ((response as AxiosResponse).status === 200) {
+          navigate(from);
+          dispatch({ type: "AUTH_SUCCESS", payload: response?.data });
+        }
+      } catch (error) {
+        console.error(error);
+
+        dispatch({
+          type: "LOGIN_ERROR",
+          payload: (error as AxiosError).response?.data,
+        });
       }
     };
 

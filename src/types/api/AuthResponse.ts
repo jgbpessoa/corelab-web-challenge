@@ -1,17 +1,11 @@
 export interface AuthResponse {
   message: string;
-  data: {
-    token: {
-      type: string;
-      token: string;
-    };
-    user: {
+  user: {
+    token: string;
+    data: {
       id: number;
       name: string;
       email: string;
-      password: string;
-      createdAt: string;
-      updatedAt: string;
     };
   };
   errors: [];
@@ -21,7 +15,13 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  password: string;
-  createdAt: string;
-  updatedAt: string;
+}
+
+export interface AuthErrors {
+  errors: AuthError[];
+}
+export interface AuthError {
+  rule: string;
+  field: string;
+  message: string;
 }

@@ -1,10 +1,13 @@
-import React, { ChangeEvent, FormEvent } from "react";
+import React, { ChangeEvent, FormEvent, useContext } from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { registerUser } from "../../lib/api";
 import { RegisterInterface } from "../../types/RegisterInterface";
+import AuthContext from "../../context/auth/AuthContext";
+import { AxiosError, AxiosResponse } from "axios";
+import { AuthError, AuthErrors } from "../../types/api/AuthResponse";
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -14,16 +17,22 @@ function RegisterPage() {
     password2: "",
   });
 
+  const { state, dispatch } = useContext(AuthContext);
   const { name, email, password, password2 } = formData;
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-
-    if (user) {
+    if (state.user) {
       navigate("/");
     }
-  }, [navigate]);
+
+    if (state.errorMessage) {
+      (state.errorMessage as Array<AuthError>).forEach((error) =>
+        toast.error(error.message)
+      );
+      dispatch({ type: "RESET" });
+    }
+  }, [navigate, state, dispatch]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -43,10 +52,17 @@ function RegisterPage() {
     };
 
     const register = async (userData: RegisterInterface) => {
-      const response: any = await registerUser(userData);
-
-      if (response.status === 200) {
-        navigate("/");
+      dispatch({ type: "AUTH_REQUEST" });
+      try {
+        const response = await registerUser(userData);
+        if ((response as AxiosResponse).status === 200) {
+          dispatch({ type: "AUTH_SUCCESS", payload: response?.data });
+          navigate("/");
+        }
+      } catch (error) {
+        console.error(error);
+        const errorData = (error as AxiosError).response?.data as AuthErrors;
+        dispatch({ type: "REGISTER_ERROR", payload: errorData });
       }
     };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { VehicleInterface } from "../../types/VehicleInterface";
 import { ColorsInterface, colors } from "../../types/ColorsInterface";
 import styles from "./Card.module.scss";
@@ -12,6 +12,8 @@ import {
 } from "../../lib/api";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../../context/auth/AuthContext";
+import { User } from "../../types/api/AuthResponse";
 
 interface CardInterface {
   vehicle: VehicleInterface;
@@ -21,15 +23,15 @@ interface CardInterface {
 
 const Card = ({ vehicle, setVehicles, favorites }: CardInterface) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const user = localStorage.getItem("user");
+  const { state } = useContext(AuthContext);
   const navigate = useNavigate();
 
   let userId;
   let userToken = "";
 
-  if (user) {
-    userId = JSON.parse(user).data.user.id;
-    userToken = JSON.parse(user).data.token.token;
+  if (state) {
+    userId = (state.user as User).id;
+    userToken = state.token;
   }
 
   useEffect(() => {
@@ -64,7 +66,7 @@ const Card = ({ vehicle, setVehicles, favorites }: CardInterface) => {
     const response = await fetchVehicles();
     if (response) {
       toast.success("Vehicle was deleted!");
-      setVehicles(response.vehicles.data);
+      setVehicles(response.data.vehicles.data);
     }
   };
 

@@ -6,10 +6,9 @@ export interface AuthContextData {
   token: string;
   isLoading: boolean;
   errorMessage: string | [];
-  dispatch?: React.Dispatch<AuthAction>;
 }
 
 export interface AuthAction {
   type: string;
-  payload: AuthResponse;
+  payload?: AuthResponse;
 }

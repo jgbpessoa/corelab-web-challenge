@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../../context/auth/AuthContext";
 import styles from "./Header.module.scss";
 
 const Header = () => {
-  const [user, setUser] = useState("");
+  const { state, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setUser(localStorage.getItem("user") as string);
-  }, []);
-
   const handleLogout = () => {
-    window.location.reload();
-    navigate("/");
+    dispatch({ type: "AUTH_REQUEST" });
     localStorage.removeItem("user");
+    dispatch({ type: "LOGOUT" });
+    navigate("/");
   };
 
   return (
@@ -23,7 +21,7 @@ const Header = () => {
         <Link to="/">Corelab Cars&ensp;&#128664;</Link>
       </div>
       <ul>
-        {user ? (
+        {state.user ? (
           <li>
             <button onClick={handleLogout}>
               <FaSignOutAlt />
